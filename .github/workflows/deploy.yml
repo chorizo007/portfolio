@@ -11,9 +11,8 @@ permissions:
   id-token: write
 
 env:
-  APP_NAME: portfolio
-  BASE_HREF: "/"
   PROJECT_NAME: "mi-portafolio-angular"
+  BASE_HREF: "/"
 
 jobs:
   build:
@@ -29,24 +28,57 @@ jobs:
           cache: 'npm'
 
       - name: 📦 Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          echo "✅ Dependencies installed"
+          npm list @angular/cli
 
       - name: 🛠️ Build Angular App
         run: |
-          npx ng build ${{ env.PROJECT_NAME }} --configuration production --base-href "${{ env.BASE_HREF }}"
-          echo "✅ Build completed successfully!"
-          ls -la dist/${{ env.APP_NAME }}/
+          echo "Building Angular app..."
+          npx ng version
+          npx ng build ${{ env.PROJECT_NAME }} --configuration production --base-href "${{ env.BASE_HREF }}" --verbose
+          echo "✅ Build completed"
+
+      - name: 🔍 DEBUG - Analyze build output
+        run: |
+          echo "=== DEBUG START ==="
+          echo "Current directory:"
+          pwd
+          echo "Content of dist/:"
+          ls -la dist/
+          echo "Content of build folder:"
+          ls -la dist/*/
+          echo "Looking for index.html:"
+          find dist/ -name "index.html" -type f
+          echo "Size of build folder:"
+          du -sh dist/*
+          echo "=== DEBUG END ==="
 
       - name: 🧩 Add .nojekyll file
         run: |
-          echo "Creating .nojekyll file..."
-          touch dist/${{ env.APP_NAME }}/.nojekyll
-          ls -la dist/${{ env.APP_NAME }}/
+          # Encuentra la carpeta exacta del build
+          if [ -d "dist/portfolio" ]; then
+            BUILD_DIR="dist/portfolio"
+          elif [ -d "dist/mi-portafolio-angular" ]; then
+            BUILD_DIR="dist/mi-portafolio-angular"
+          elif [ -d "dist/browser" ]; then
+            BUILD_DIR="dist/browser"
+          else
+            echo "❌ ERROR: No build folder found!"
+            ls -la dist/
+            exit 1
+          fi
+          
+          echo "Build directory: $BUILD_DIR"
+          echo "" > "$BUILD_DIR/.nojekyll"
+          echo "✅ .nojekyll created"
+          ls -la "$BUILD_DIR/"
 
       - name: 📤 Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/${{ env.APP_NAME }}
+          path: ${{ steps.build-dir.outputs.BUILD_DIR }}
 
   deploy:
     environment:
@@ -62,3 +94,8 @@ jobs:
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: ✅ Verify deployment
+        run: |
+          echo "Deployment status: ${{ steps.deployment.outcome }}"
+          echo "URL: ${{ steps.deployment.outputs.page_url }}"
