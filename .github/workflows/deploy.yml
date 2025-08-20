@@ -5,14 +5,18 @@ on:
     branches: [main]
   workflow_dispatch:
 
+env:
+  PROJECT_NAME: "mi-portafolio-angular"
+  BASE_HREF: "/"
+
 permissions:
   contents: read
   pages: write
   id-token: write
 
-env:
-  PROJECT_NAME: "mi-portafolio-angular"
-  BASE_HREF: "/"
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -26,59 +30,49 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🔍 DEBUG - Verify project structure
         run: |
-          npm ci
-          echo "✅ Dependencies installed"
-          npm list @angular/cli
+          echo "=== PROJECT STRUCTURE ==="
+          ls -la
+          echo "=== DIST FOLDER AFTER BUILD ==="
+          npm run build
+          ls -la dist/
 
       - name: 🛠️ Build Angular App
-        run: |
-          echo "Building Angular app..."
-          npx ng version
-          npx ng build ${{ env.PROJECT_NAME }} --configuration production --base-href "${{ env.BASE_HREF }}" --verbose
-          echo "✅ Build completed"
+        run: npx ng build ${{ env.PROJECT_NAME }} --configuration production --base-href "${{ env.BASE_HREF }}"
 
-      - name: 🔍 DEBUG - Analyze build output
+      - name: 🔍 Find exact build path
+        id: find-build
         run: |
-          echo "=== DEBUG START ==="
-          echo "Current directory:"
-          pwd
-          echo "Content of dist/:"
-          ls -la dist/
-          echo "Content of build folder:"
-          ls -la dist/*/
-          echo "Looking for index.html:"
-          find dist/ -name "index.html" -type f
-          echo "Size of build folder:"
-          du -sh dist/*
-          echo "=== DEBUG END ==="
-
-      - name: 🧩 Add .nojekyll file
-        run: |
-          # Encuentra la carpeta exacta del build
-          if [ -d "dist/portfolio" ]; then
-            BUILD_DIR="dist/portfolio"
-          elif [ -d "dist/mi-portafolio-angular" ]; then
-            BUILD_DIR="dist/mi-portafolio-angular"
+          if [ -d "dist/PORTFOLIO/browser" ]; then
+            echo "BUILD_PATH=dist/PORTFOLIO/browser" >> $GITHUB_OUTPUT
+          elif [ -d "dist/PORTFOLIO" ]; then
+            echo "BUILD_PATH=dist/PORTFOLIO" >> $GITHUB_OUTPUT
           elif [ -d "dist/browser" ]; then
-            BUILD_DIR="dist/browser"
+            echo "BUILD_PATH=dist/browser" >> $GITHUB_OUTPUT
+          elif [ -d "dist/mi-portafolio-angular" ]; then
+            echo "BUILD_PATH=dist/mi-portafolio-angular" >> $GITHUB_OUTPUT
           else
             echo "❌ ERROR: No build folder found!"
             ls -la dist/
             exit 1
           fi
-          
-          echo "Build directory: $BUILD_DIR"
-          echo "" > "$BUILD_DIR/.nojekyll"
-          echo "✅ .nojekyll created"
-          ls -la "$BUILD_DIR/"
+          echo "Build path: ${{ steps.find-build.outputs.BUILD_PATH }}"
+
+      - name: 🧩 Add .nojekyll file
+        run: |
+          echo "" > ${{ steps.find-build.outputs.BUILD_PATH }}/.nojekyll
+          echo "✅ .nojekyll file created"
 
       - name: 📤 Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ steps.build-dir.outputs.BUILD_DIR }}
+          path: ${{ steps.find-build.outputs.BUILD_PATH }}
 
   deploy:
     environment:
@@ -97,5 +91,5 @@ jobs:
 
       - name: ✅ Verify deployment
         run: |
-          echo "Deployment status: ${{ steps.deployment.outcome }}"
-          echo "URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "🎉 Deployment completed successfully!"
+          echo "🌐 Your site is live at: ${{ steps.deployment.outputs.page_url }}"

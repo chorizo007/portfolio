@@ -13,18 +13,20 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/portfolio",
-            "baseHref": "/portfolio/",
-            "tsConfig": "tsconfig.app.json", 
+            "outputPath": "dist/PORTFOLIO/browser",
+            "baseHref": "/",
+            "tsConfig": "tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "/"
               }
             ],
             "styles": [
               "src/styles.css"
-            ]
+            ],
+            "scripts": []
           },
           "configurations": {
             "production": {
