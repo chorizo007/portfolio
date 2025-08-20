@@ -5,18 +5,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
-env:
-  PROJECT_NAME: "mi-portafolio-angular"
-  BASE_HREF: "/"
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
-concurrency:
-  group: 'pages'
-  cancel-in-progress: true
 
 jobs:
   build:
@@ -28,51 +20,45 @@ jobs:
       - name: ⚙️ Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
           cache: 'npm'
-          cache-dependency-path: package-lock.json
 
       - name: 📦 Install dependencies
-        run: npm ci
-
-      - name: 🔍 DEBUG - Verify project structure
-        run: |
-          echo "=== PROJECT STRUCTURE ==="
-          ls -la
-          echo "=== DIST FOLDER AFTER BUILD ==="
-          npm run build
-          ls -la dist/
+        run: npm install
 
       - name: 🛠️ Build Angular App
-        run: npx ng build ${{ env.PROJECT_NAME }} --configuration production --base-href "${{ env.BASE_HREF }}"
+        run: npm run build
 
-      - name: 🔍 Find exact build path
-        id: find-build
+      - name: 🔍 DEBUG - Find the correct build folder
         run: |
-          if [ -d "dist/PORTFOLIO/browser" ]; then
-            echo "BUILD_PATH=dist/PORTFOLIO/browser" >> $GITHUB_OUTPUT
-          elif [ -d "dist/PORTFOLIO" ]; then
-            echo "BUILD_PATH=dist/PORTFOLIO" >> $GITHUB_OUTPUT
+          echo "=== CONTENT OF DIST ==="
+          ls -la dist/
+          echo "=== FINDING INDEX.HTML ==="
+          find dist/ -name "index.html" -type f
+          
+          # Force move all build files to root of dist/
+          if [ -d "dist/portfolio/browser" ]; then
+            echo "📁 Found: dist/portfolio/browser/"
+            cp -r dist/portfolio/browser/* dist/
+          elif [ -d "dist/PORTFOLIO/browser" ]; then
+            echo "📁 Found: dist/PORTFOLIO/browser/"
+            cp -r dist/PORTFOLIO/browser/* dist/
           elif [ -d "dist/browser" ]; then
-            echo "BUILD_PATH=dist/browser" >> $GITHUB_OUTPUT
-          elif [ -d "dist/mi-portafolio-angular" ]; then
-            echo "BUILD_PATH=dist/mi-portafolio-angular" >> $GITHUB_OUTPUT
+            echo "📁 Found: dist/browser/"
+            cp -r dist/browser/* dist/
           else
-            echo "❌ ERROR: No build folder found!"
-            ls -la dist/
-            exit 1
+            echo "❌ No browser folder found, using dist/ as-is"
           fi
-          echo "Build path: ${{ steps.find-build.outputs.BUILD_PATH }}"
 
       - name: 🧩 Add .nojekyll file
         run: |
-          echo "" > ${{ steps.find-build.outputs.BUILD_PATH }}/.nojekyll
-          echo "✅ .nojekyll file created"
+          echo "" > dist/.nojekyll
+          echo "✅ .nojekyll file created in dist/"
 
       - name: 📤 Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ steps.find-build.outputs.BUILD_PATH }}
+          path: dist/
 
   deploy:
     environment:
@@ -88,8 +74,3 @@ jobs:
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: ✅ Verify deployment
-        run: |
-          echo "🎉 Deployment completed successfully!"
-          echo "🌐 Your site is live at: ${{ steps.deployment.outputs.page_url }}"
