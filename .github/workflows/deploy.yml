@@ -20,11 +20,18 @@ jobs:
       - name: ⚙️ Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20.19.0  # ← VERSIÓN EXACTA que necesitas
           cache: 'npm'
 
       - name: 📦 Install dependencies
         run: npm install
+
+      - name: 🔍 Verify Node.js version
+        run: |
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
+          echo "Angular CLI version:"
+          npx ng version || echo "ng command not available"
 
       - name: 🛠️ Build Angular App
         run: npm run build
