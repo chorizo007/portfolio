@@ -5,19 +5,15 @@ on:
     branches: [main]
   workflow_dispatch:
 
-env:
-  APP_NAME: portfolio  # ← Coincide con outputPath
-  BASE_HREF: "/portfolio/"
-  PROJECT_NAME: "mi-portafolio-angular"  # ← NUEVO: nombre de tu proyecto
-
 permissions:
   contents: read
   pages: write
   id-token: write
 
-concurrency:
-  group: 'pages'
-  cancel-in-progress: true
+env:
+  APP_NAME: portfolio
+  BASE_HREF: "/"
+  PROJECT_NAME: "mi-portafolio-angular"
 
 jobs:
   build:
@@ -31,17 +27,21 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: package-lock.json
 
       - name: 📦 Install dependencies
         run: npm ci
 
       - name: 🛠️ Build Angular App
-        run: npx ng build ${{ env.PROJECT_NAME }} --configuration production --base-href "${{ env.BASE_HREF }}"
-        # ↑↑↑ IMPORTANTE: Especificar el nombre del proyecto ↑↑↑
+        run: |
+          npx ng build ${{ env.PROJECT_NAME }} --configuration production --base-href "${{ env.BASE_HREF }}"
+          echo "✅ Build completed successfully!"
+          ls -la dist/${{ env.APP_NAME }}/
 
-      - name: 🧩 Add .nojekyll file (para SPAs)
-        run: echo "" > dist/${{ env.APP_NAME }}/.nojekyll
+      - name: 🧩 Add .nojekyll file
+        run: |
+          echo "Creating .nojekyll file..."
+          touch dist/${{ env.APP_NAME }}/.nojekyll
+          ls -la dist/${{ env.APP_NAME }}/
 
       - name: 📤 Upload artifact
         uses: actions/upload-pages-artifact@v3
