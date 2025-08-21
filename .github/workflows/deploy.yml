@@ -44,15 +44,9 @@ jobs:
           find dist/ -name "index.html" -type f
           
           # Force move all build files to root of dist/
-          if [ -d "dist/portfolio/browser" ]; then
-            echo "📁 Found: dist/portfolio/browser/"
-            cp -r dist/portfolio/browser/* dist/
-          elif [ -d "dist/PORTFOLIO/browser" ]; then
-            echo "📁 Found: dist/PORTFOLIO/browser/"
-            cp -r dist/PORTFOLIO/browser/* dist/
-          elif [ -d "dist/browser" ]; then
-            echo "📁 Found: dist/browser/"
-            cp -r dist/browser/* dist/
+          if [ -d "dist/mi-portafolio-angular/browser" ]; then
+            echo "📁 Found: dist/mi-portafolio-angular/browser/"
+            cp -r dist/mi-portafolio-angular/browser/* dist/
           else
             echo "❌ No browser folder found, using dist/ as-is"
           fi
