@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "predeploy": "ng build --configuration production --base-href=/portfolio/ --deploy-url=/portfolio/",
-    "deploy": "ngh --dir=dist/mi-portafolio-angular --no-silent",
+    "deploy": "ngh --dir=dist/mi-portafolio-angular/browser --no-silent",
     "serve:ssr:mi-portafolio-angular": "node dist/mi-portafolio-angular/server/server.mjs"
   },
   "prettier": {
