@@ -1,16 +1,14 @@
 {
   "name": "mi-portafolio-angular",
   "version": "0.0.0",
-  "engines": {
-    "node": ">=20.19.0",
-    "npm": ">=10.0.0"
-  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "predeploy": "ng build --configuration production --base-href=/portfolio/ --deploy-url=/portfolio/",
+    "deploy": "ngh --dir=dist/mi-portafolio-angular --no-silent",
     "serve:ssr:mi-portafolio-angular": "node dist/mi-portafolio-angular/server/server.mjs"
   },
   "prettier": {
