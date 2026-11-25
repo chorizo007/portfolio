@@ -59,6 +59,22 @@
     </ul>
 
     <p class="prompt">
+      <b>nicolas@portfolio</b><i>:~/sobre-mi</i>$ cat formacion.academica
+    </p>
+
+    <ul class="studies">
+      @for (item of studies; track item.title) {
+        <li>
+          <span class="studies__years">{{ item.years }}</span>
+          <span class="studies__body">
+            <strong>{{ item.title }}</strong>
+            <span class="studies__place">{{ item.place }} · {{ item.level }}</span>
+          </span>
+        </li>
+      }
+    </ul>
+
+    <p class="prompt">
       <b>nicolas@portfolio</b><i>:~/sobre-mi</i>$ ls ~/stack
     </p>
 

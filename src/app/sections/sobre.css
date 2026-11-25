@@ -163,6 +163,55 @@
   color: var(--line-2);
 }
 
+/* ---------- formación ---------- */
+
+.studies {
+  display: grid;
+  gap: 14px;
+  margin: 14px 0 24px;
+  padding-left: 18px;
+  border-left: 1px solid var(--line);
+}
+
+.studies li {
+  position: relative;
+  display: grid;
+  gap: 2px;
+}
+
+.studies li::before {
+  content: '▪';
+  position: absolute;
+  top: 5px;
+  left: -19px;
+  color: var(--accent-2);
+  font-size: 10px;
+}
+
+.studies__years {
+  color: var(--accent-2);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+}
+
+.studies__body {
+  display: grid;
+  gap: 1px;
+  color: var(--fg-soft);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.studies__body strong {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.studies__place {
+  color: var(--muted);
+  font-size: 12px;
+}
+
 /* ---------- llamada final ---------- */
 
 .cta {

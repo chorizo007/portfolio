@@ -20,6 +20,35 @@ export const BIO: string[] = [
   'Cuando algo me interesa de verdad lo convierto en un proyecto: lo maqueto, lo programo, lo rompo, lo arreglo y lo publico. Los repositorios de la pestaña 02 son el registro de ese recorrido, desde las primeras prácticas hasta lo que estoy construyendo ahora.',
 ];
 
+export interface StudyItem {
+  years: string;
+  title: string;
+  place: string;
+  level: string;
+}
+
+/** Formación académica, de lo primero a lo último. */
+export const STUDIES: StudyItem[] = [
+  {
+    years: '2020 — 2022',
+    title: 'Sistemas Microinformáticos y Redes',
+    place: 'IES Ntra. Sra. de la Victoria de Lepanto',
+    level: 'grado medio',
+  },
+  {
+    years: '2022 — 2024',
+    title: 'Desarrollo de Aplicaciones Web',
+    place: 'IES Domenico Scarlatti',
+    level: 'grado superior',
+  },
+  {
+    years: 'en curso',
+    title: 'Grado en Ingeniería Informática',
+    place: 'UNIR · Universidad Internacional de La Rioja',
+    level: 'grado universitario',
+  },
+];
+
 export const STACK: string[] = [
   'Java',
   'Spring Boot',

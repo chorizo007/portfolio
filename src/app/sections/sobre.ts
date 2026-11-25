@@ -1,6 +1,6 @@
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 
-import { BIO, PROFILE, STACK, TIMELINE } from '../data/profile';
+import { BIO, PROFILE, STACK, STUDIES, TIMELINE } from '../data/profile';
 import { REPOS } from '../data/repos.data';
 
 /**
@@ -42,6 +42,7 @@ export class Sobre {
   protected readonly bio = BIO;
   protected readonly stack = STACK;
   protected readonly timeline = TIMELINE;
+  protected readonly studies = STUDIES;
   protected readonly banner = BANNER;
   protected readonly fetchArt = FETCH_ART;
   protected readonly rule = RULE;
@@ -54,6 +55,7 @@ export class Sobre {
     { key: 'rol', value: PROFILE.role },
     { key: 'ubicación', value: PROFILE.location },
     { key: 'stack', value: 'java · spring · angular' },
+    { key: 'estudios', value: 'smr · daw · ing. informática' },
     { key: 'repos', value: `${REPOS.length} públicos` },
     { key: 'uptime', value: '4 años escribiendo código' },
     { key: 'linkedin', value: 'nicolás herraiz gil' },
