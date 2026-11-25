@@ -10,6 +10,10 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,57 +24,38 @@ jobs:
       - name: ⚙️ Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.19.0  # ← VERSIÓN EXACTA que necesitas
+          node-version: 20.19.0
           cache: 'npm'
 
       - name: 📦 Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: 🔍 Verify Node.js version
-        run: |
-          echo "Node version: $(node --version)"
-          echo "NPM version: $(npm --version)"
-          echo "Angular CLI version:"
-          npx ng version || echo "ng command not available"
-
-      - name: 🛠️ Build Angular App
+      - name: 🛠️ Build Angular app
         run: npm run build
 
-      - name: 🔍 DEBUG - Find the correct build folder
+      - name: 🧩 Prepare artifact
         run: |
-          echo "=== CONTENT OF DIST ==="
-          ls -la dist/
-          echo "=== FINDING INDEX.HTML ==="
-          find dist/ -name "index.html" -type f
-          
-          # Force move all build files to root of dist/
-          if [ -d "dist/mi-portafolio-angular/browser" ]; then
-            echo "📁 Found: dist/mi-portafolio-angular/browser/"
-            cp -r dist/mi-portafolio-angular/browser/* dist/
-          else
-            echo "❌ No browser folder found, using dist/ as-is"
-          fi
+          OUT=dist/mi-portafolio-angular/browser
+          echo "=== $OUT ==="
+          ls -la "$OUT"
+          test -f "$OUT/index.html" || { echo "❌ falta index.html"; exit 1; }
+          echo "" > "$OUT/.nojekyll"
+          echo "✅ build listo ($(du -sh "$OUT" | cut -f1))"
 
-      - name: 🧩 Add .nojekyll file
-        run: |
-          echo "" > dist/.nojekyll
-          echo "✅ .nojekyll file created in dist/"
-
-      - name: 📤 Upload artifact
+      - name: 📤 Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/
+          path: dist/mi-portafolio-angular/browser
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    
-    needs: build
-    runs-on: ubuntu-latest
     steps:
       - name: ⚙️ Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
 
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
