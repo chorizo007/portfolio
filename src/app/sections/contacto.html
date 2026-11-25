@@ -1,0 +1,46 @@
+<h1 class="sr-only">Contacto</h1>
+
+<div class="term">
+  <div class="term__bar">
+    <span class="term__title">~/contacto.txt</span>
+    <span class="term__dots" aria-hidden="true">● ● ●</span>
+  </div>
+
+  <div class="term__body">
+    <p class="prompt">
+      <b>nicolas@portfolio</b><i>:~</i>$ cat contacto.txt
+    </p>
+
+    <p class="lead">¿Hablamos?</p>
+    <p class="text">
+      Estoy buscando mi siguiente paso como desarrollador: un equipo donde seguir construyendo
+      producto, aprender de gente que lleva más kilómetros y aportar todo lo que ya sé de front,
+      back y despliegue.
+    </p>
+    <p class="text">
+      Si tienes un proyecto, una vacante o simplemente quieres comentar algo del código, escríbeme.
+      Respondo rápido.
+    </p>
+
+    <ul class="links">
+      <li>
+        <span class="links__key">linkedin</span>
+        <a [href]="profile.linkedin" target="_blank" rel="noopener">
+          nicolás herraiz gil ↗
+        </a>
+      </li>
+      <li>
+        <span class="links__key">github</span>
+        <a [href]="profile.github" target="_blank" rel="noopener"> github.com/chorizo007 ↗ </a>
+      </li>
+      <li>
+        <span class="links__key">web</span>
+        <a [href]="profile.site" target="_blank" rel="noopener">
+          chorizo007.github.io/portfolio ↗
+        </a>
+      </li>
+    </ul>
+
+    <pre class="sign" aria-hidden="true">{{ sign }}</pre>
+  </div>
+</div>

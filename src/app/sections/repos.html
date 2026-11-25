@@ -1,0 +1,92 @@
+<h1 class="sr-only">Repositorios públicos de Nicolás Herraiz Gil</h1>
+
+<div class="term">
+  <div class="term__bar">
+    <span class="term__title">~/repos</span>
+    <span class="term__dots" aria-hidden="true">● ● ●</span>
+  </div>
+
+  <div class="term__body">
+    <p class="prompt">
+      <b>nicolas@portfolio</b><i>:~/repos</i>$ gh repo list chorizo007 --public --limit 100
+    </p>
+
+    <p class="lead">{{ all.length }} repositorios públicos</p>
+    <p class="text">
+      Todo lo que he ido publicando, con una explicación de qué es cada cosa. {{ demoCount }} tienen
+      demo en vivo; el resto son prácticas, ejercicios o ejemplos de backend que se ejecutan en
+      local.
+    </p>
+
+    <div class="filters" role="group" aria-label="Filtrar repositorios por lenguaje">
+      <button
+        type="button"
+        class="chip"
+        [class.chip--on]="filter() === 'todos'"
+        [attr.aria-pressed]="filter() === 'todos'"
+        (click)="filter.set('todos')"
+      >
+        todos <span class="chip__n">{{ all.length }}</span>
+      </button>
+
+      @for (lang of languages(); track lang) {
+        <button
+          type="button"
+          class="chip"
+          [class.chip--on]="filter() === lang"
+          [attr.aria-pressed]="filter() === lang"
+          (click)="filter.set(lang)"
+        >
+          {{ lang.toLowerCase() }} <span class="chip__n">{{ countFor(lang) }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="repo-grid">
+      @for (repo of visible(); track repo.name) {
+        <article class="repo">
+          <header class="repo__head">
+            <h2 class="repo__name">{{ repo.name }}</h2>
+            <span class="repo__lang">
+              <span class="dot repo__dot" aria-hidden="true"></span>{{ repo.lang.toLowerCase() }}
+            </span>
+          </header>
+
+          <p class="repo__desc">{{ repo.description }}</p>
+
+          <ul class="repo__stack">
+            @for (tech of repo.stack; track tech) {
+              <li class="tag tag--sm">{{ tech }}</li>
+            }
+          </ul>
+
+          <footer class="repo__foot">
+            <div class="repo__links">
+              <a class="btn btn--sm" [href]="repo.url" target="_blank" rel="noopener">
+                código ↗
+              </a>
+              @if (repo.demo) {
+                <a
+                  class="btn btn--sm btn--primary"
+                  [href]="repo.demo"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  demo ↗
+                </a>
+              }
+            </div>
+            <span class="repo__year">
+              @if (repo.fork) {
+                fork ·
+              }
+              act. {{ repo.year }}
+            </span>
+          </footer>
+        </article>
+      } @empty {
+        <p class="empty"># sin resultados para este filtro</p>
+      }
+    </div>
+  </div>
+</div>

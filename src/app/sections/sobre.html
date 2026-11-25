@@ -1,0 +1,80 @@
+<h1 class="sr-only">{{ profile.name }} — {{ profile.role }}</h1>
+
+<section class="hero">
+  <pre class="banner" aria-hidden="true">{{ banner }}</pre>
+  <p class="hero__role">
+    <span class="hero__mark" aria-hidden="true">&gt;</span>
+    <span>{{ typed() }}</span><span class="caret" aria-hidden="true">█</span>
+  </p>
+  <p class="hero__meta">// {{ profile.name }} · {{ profile.location }}</p>
+</section>
+
+<div class="term">
+  <div class="term__bar">
+    <span class="term__title">~/sobre-mi.md</span>
+    <span class="term__dots" aria-hidden="true">● ● ●</span>
+  </div>
+
+  <div class="term__body">
+    <p class="prompt">
+      <b>nicolas@portfolio</b><i>:~/sobre-mi</i>$ whoami
+    </p>
+
+    <p class="lead">{{ profile.name }}</p>
+
+    @for (paragraph of bio; track $index) {
+      <p class="text">{{ paragraph }}</p>
+    }
+
+    <p class="prompt">
+      <b>nicolas@portfolio</b><i>:~/sobre-mi</i>$ cat trayectoria.log
+    </p>
+
+    <ul class="timeline">
+      @for (item of timeline; track item.year) {
+        <li>
+          <span class="timeline__year">{{ item.year }}</span>
+          <span class="timeline__body">
+            <strong>{{ item.title }}</strong>
+            <span class="timeline__text">{{ item.text }}</span>
+          </span>
+        </li>
+      }
+    </ul>
+
+    <p class="prompt">
+      <b>nicolas@portfolio</b><i>:~/sobre-mi</i>$ ls ~/stack
+    </p>
+
+    <ul class="tags">
+      @for (tech of stack; track tech) {
+        <li class="tag">{{ tech }}</li>
+      }
+    </ul>
+
+    <p class="prompt">
+      <b>nicolas@portfolio</b><i>:~/sobre-mi</i>$ repo-stats --by-language
+    </p>
+
+    <ul class="bars">
+      @for (stat of langStats(); track stat.lang) {
+        <li class="bar-row">
+          <span class="bar-row__label">{{ stat.lang }}</span>
+          <span class="bar-row__bar" aria-hidden="true">{{ stat.bar }}</span>
+          <span class="bar-row__val">{{ stat.count }}</span>
+        </li>
+      }
+    </ul>
+
+    <p class="note">// {{ totalRepos }} repositorios públicos · últimos cuatro años de código</p>
+
+    <div class="cta">
+      <a class="btn btn--primary" [href]="profile.linkedin" target="_blank" rel="noopener">
+        ↗ linkedin / mi trayectoria
+      </a>
+      <a class="btn" [href]="profile.github" target="_blank" rel="noopener">
+        ↗ github / chorizo007
+      </a>
+    </div>
+  </div>
+</div>
