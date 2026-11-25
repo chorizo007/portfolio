@@ -2,6 +2,15 @@
   display: block;
 }
 
+.repos-banner {
+  margin: 0 0 clamp(14px, 2vw, 20px);
+  color: rgba(126, 240, 255, 0.5);
+  font-size: clamp(3.4px, 1.6vw, 13px);
+  line-height: 1.02;
+  white-space: pre;
+  overflow-x: auto;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;

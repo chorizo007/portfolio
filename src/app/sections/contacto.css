@@ -2,6 +2,15 @@
   display: block;
 }
 
+.mail {
+  margin: 20px 0 0;
+  color: var(--line-2);
+  font-size: clamp(9px, 1.7vw, 12px);
+  line-height: 1.2;
+  white-space: pre;
+  overflow-x: auto;
+}
+
 .links {
   display: grid;
   gap: 2px;

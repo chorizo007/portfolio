@@ -27,6 +27,22 @@
     }
 
     <p class="prompt">
+      <b>nicolas@portfolio</b><i>:~/sobre-mi</i>$ neofetch
+    </p>
+
+    <div class="fetch">
+      <pre class="fetch__art" aria-hidden="true">{{ fetchArt }}</pre>
+      <ul class="fetch__rows">
+        @for (row of fetchRows; track row.key) {
+          <li>
+            <span class="fetch__key">{{ row.key }}</span>
+            <span class="fetch__val">{{ row.value }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <p class="prompt">
       <b>nicolas@portfolio</b><i>:~/sobre-mi</i>$ cat trayectoria.log
     </p>
 
@@ -67,6 +83,8 @@
     </ul>
 
     <p class="note">// {{ totalRepos }} repositorios públicos · últimos cuatro años de código</p>
+
+    <pre class="rule" aria-hidden="true">{{ rule }}</pre>
 
     <div class="cta">
       <a class="btn btn--primary" [href]="profile.linkedin" target="_blank" rel="noopener">

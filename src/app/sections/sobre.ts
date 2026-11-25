@@ -3,14 +3,32 @@ import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { BIO, PROFILE, STACK, TIMELINE } from '../data/profile';
 import { REPOS } from '../data/repos.data';
 
-const BANNER = [
+/**
+ * Banner del nombre. La primera fila dibuja la tilde sobre la A:
+ * el nombre es Nicolás, con acento, también en el arte.
+ */
+const NAME_ART = [
   '███╗   ██╗██╗ ██████╗ ██████╗ ██╗      █████╗ ███████╗',
   '████╗  ██║██║██╔════╝██╔═══██╗██║     ██╔══██╗██╔════╝',
   '██╔██╗ ██║██║██║     ██║   ██║██║     ███████║███████╗',
   '██║╚██╗██║██║██║     ██║   ██║██║     ██╔══██║╚════██║',
   '██║ ╚████║██║╚██████╗╚██████╔╝███████╗██║  ██║███████║',
   '╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝',
+];
+
+const BANNER = [`${' '.repeat(40)}~~~~`, ...NAME_ART].join('\n');
+
+/** Retrato de terminal para el bloque tipo neofetch. */
+const FETCH_ART = [
+  ' ███╗   ██╗',
+  ' ████╗  ██║',
+  ' ██╔██╗ ██║',
+  ' ██║╚██╗██║',
+  ' ██║ ╚████║',
+  ' ╚═╝  ╚═══╝',
 ].join('\n');
+
+const RULE = '· ─────────────────────────────────────────────────────── ·';
 
 const BAR_WIDTH = 14;
 
@@ -25,8 +43,21 @@ export class Sobre {
   protected readonly stack = STACK;
   protected readonly timeline = TIMELINE;
   protected readonly banner = BANNER;
+  protected readonly fetchArt = FETCH_ART;
+  protected readonly rule = RULE;
   protected readonly totalRepos = REPOS.length;
   protected readonly typed = signal('');
+
+  /** Ficha rápida al estilo neofetch, con datos reales del perfil. */
+  protected readonly fetchRows = [
+    { key: 'user', value: 'nicolas' },
+    { key: 'rol', value: PROFILE.role },
+    { key: 'ubicación', value: PROFILE.location },
+    { key: 'stack', value: 'java · spring · angular' },
+    { key: 'repos', value: `${REPOS.length} públicos` },
+    { key: 'uptime', value: '4 años escribiendo código' },
+    { key: 'linkedin', value: 'nicolás herraiz gil' },
+  ];
 
   /** Barras ASCII calculadas con los repos reales de la cuenta. */
   protected readonly langStats = computed(() => {
